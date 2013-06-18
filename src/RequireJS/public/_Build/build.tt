@@ -1,0 +1,41 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Configuration" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".js" #>
+
+
+({
+	appDir: '<#= relativeBaseUrl #>',
+	baseUrl: './',
+	mainConfigFile: '<#= relativeBaseUrl #>/core.js',
+	dir: '../release',
+	modules: [
+	<# foreach(string path in System.IO.Directory.GetFiles(this.Host.ResolvePath(relativeBaseUrl+"/views"), "*.js", System.IO.SearchOption.AllDirectories)) { #>
+		{
+			name: '<#= GetRequireJSName(path) #>'
+		},
+	<# } #>
+	],
+	onBuildRead: function (moduleName, path, contents) {
+        if (moduleName === "core") {
+            return contents.replace("/public/js","/public/release")
+        }
+        return contents;
+    },
+})
+
+
+
+
+<#+ 
+	public const string relativeBaseUrl = "../js";
+
+	public string GetRequireJSName(string path){
+	var relativePath = Path.GetFullPath(path).Replace(Path.GetFullPath(this.Host.ResolvePath("..\\js\\")), "");
+	return Path.Combine(Path.GetDirectoryName(relativePath), Path.GetFileNameWithoutExtension(relativePath)).Replace("\\", "/");
+} #>
+

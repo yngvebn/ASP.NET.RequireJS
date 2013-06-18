@@ -1,0 +1,25 @@
+﻿@using RequireJS.Helpers
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts{
+    @* <script src="/Scripts/require.js"></script>
+    <script src="/public/js/require.config.js"></script>
+
+    <script>
+     @Html.RequireJs("app/core","app/main/index");
+    </script>
+    <script>require(['core', 'views/home']);</script>*@
+    
+}
+
+<script type="text/javascript">
+    console.log('dom not yet ready.')
+</script>
+<div id="view">
+    <h1 data-bind="text: title, isActive: active"></h1>
+    <p data-bind="text: body"></p>
+    <input type="text" data-bind="value: title" />
+    <button data-bind="click: activate">Activate</button>
+</div>
